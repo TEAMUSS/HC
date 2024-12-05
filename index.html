@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Holidays Countdown - Made By Team USS</title>
+    <style>
+      body {
+        background-image: url('bg.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        text-align: center;
+        color: white;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+      }
+      .countdown {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+        padding: 20px;
+      }
+      .holiday {
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+        padding: 10px;
+      }
+      .holiday img {
+        width: 100%;
+        height: auto;
+      }
+      h1 {
+        font-size: 2.5em;
+        margin: 20px 0;
+      }
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 2em;
+        }
+        .holiday {
+          padding: 5px;
+        }
+        .countdown {
+          padding: 10px;
+        }
+      }
+      @media (max-width: 400px) {
+        h1 {
+          font-size: 1.5em;
+        }
+        .holiday {
+          padding: 3px;
+        }
+      }
+      /* Modal styles */
+      .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+      }
+      .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+        text-align: center;
+      }
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Holidays Countdown - Made By Team USS</h1>
+    <div class="countdown">
+      
+     
+	  <div class="holiday">
+        <img src="yn.jpg" alt="Yaldā Night" />
+        <h2>Yaldā Night</h2>
+        <div id="yaldāCountdown"></div>
+      </div>
+      <div class="holiday">
+        <img src="cs.jpg" alt="Christmas" />
+        <h2>Christmas</h2>
+        <div id="christmasCountdown"></div>
+      </div>
+      <div class="holiday">
+        <img src="ny.jpg" alt="New Year" />
+        <h2>New Year</h2>
+        <div id="newYearCountdown"></div>
+      </div>
+      <div class="holiday">
+        <img src="vt.jpg" alt="Valentine" />
+        <h2>Valentine</h2>
+        <div id="valentinesCountdown"></div>
+      </div>
+	        <div class="holiday">
+        <img src="r.jpg" alt="1st Day of Ramazan" />
+        <h2>1st Day of Ramazan</h2>
+        <div id="ramazanCountdown"></div>
+      </div>
+	   <div class="holiday">
+        <img src="nw.jpg" alt="Nowruz" />
+        <h2>Nowruz</h2>
+        <div id="nowruzCountdown"></div>
+      </div>
+      <div class="holiday">
+        <img src="es.jpg" alt="Easter" />
+        <h2>Easter</h2>
+        <div id="easterCountdown"></div>
+      </div>
+      <!-- New Holidays -->
+     
+      <div class="holiday">
+        <img src="sb.jpg" alt="Sizdah Bedar" />
+        <h2>Sizdah Bedar</h2>
+        <div id="sizdahBedarCountdown"></div>
+      </div>
+      
+
+      <div class="holiday">
+        <img src="ef.jpg" alt="Eid al-Fitr" />
+        <h2>Eid al-Fitr</h2>
+        <div id="eidAlFitrCountdown"></div>
+      </div>
+	  <div class="holiday">
+        <img src="hw.jpg" alt="Halloween" />
+        <h2>Halloween</h2>
+        <div id="halloweenCountdown"></div>
+      </div>
+	  
+	   <div class="holiday">
+        <img src="tg.jpg" alt="Thanksgiving" />
+        <h2>Thanksgiving</h2>
+        <div id="thanksgivingCountdown"></div>
+      </div>
+	  
+    </div>
+
+    <!-- Modal -->
+    <div id="holidayModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <img id="modalImage" src="" alt="" style="width:100%; height:auto;">
+        <h2 id="modalMessage"></h2>
+      </div>
+	  
+    </div>
+
+    <script>
+      function updateCountdown(holidayDate, elementId, holidayName) {
+        const countdownElement = document.getElementById(elementId);
+        const now = new Date();
+        let nextHoliday = new Date(holidayDate);
+        if (nextHoliday < now) {
+          nextHoliday.setFullYear(nextHoliday.getFullYear() + 1);
+        }
+        const timeDiff = nextHoliday - now;
+        const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        
+        countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+        // Show modal when countdown reaches zero
+        if (timeDiff <= 0) {
+          showModal(holidayName);
+        }
+      }
+
+      function showModal(holidayName) {
+        const modal = document.getElementById("holidayModal");
+        const modalImage = document.getElementById("modalImage");
+        const modalMessage = document.getElementById("modalMessage");
+
+        modalImage.src = `${holidayName.toLowerCase()}.jpg`; // Assuming image names are in lowercase
+        modalMessage.innerHTML = `Happy ${holidayName}!`;
+        modal.style.display = "block";
+      }
+
+      // Close the modal when the user clicks on <span> (x)
+      document.querySelector(".close").onclick = function() {
+        document.getElementById("holidayModal").style.display = "none";
+      }
+
+      setInterval(() => {
+        updateCountdown('2025-03-20T12:31:00', 'nowruzCountdown', 'Nowruz');
+        updateCountdown('2024-04-01T00:00:00', 'sizdahBedarCountdown', 'Sizdah Bedar');
+        updateCountdown('2024-12-21T00:00:00', 'yaldāCountdown', 'Yaldā Night');
+        updateCountdown('2024-03-11T00:00:00', 'ramazanCountdown', '1st Day of Ramazan');
+        updateCountdown('2024-04-10T00:00:00', 'eidAlFitrCountdown', 'Eid al-Fitr');
+        updateCountdown('2024-10-31T00:00:00', 'halloweenCountdown', 'Halloween');
+        updateCountdown('2024-11-28T00:00:00', 'thanksgivingCountdown', 'Thanksgiving');
+        updateCountdown('2024-12-25T00:00:00', 'christmasCountdown', 'Christmas');
+        updateCountdown('2024-01-01T00:00:00', 'newYearCountdown', 'New Year');
+        updateCountdown('2024-02-14T00:00:00', 'valentinesCountdown', 'Valentine');
+        updateCountdown('2024-03-31T00:00:00', 'easterCountdown', 'Easter');
+      }, 1000);
+    </script>
+  </body>
+</html>
